@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 from numpy.ma import array
 from src.util import fill
@@ -24,3 +25,7 @@ class Test(TestCase):
         actual_result = fill(destination, source)
         expected_result = array([array([self.three]), array([self.four]), array([self.five])])
         self.assertCountEqual(expected_result.tolist(), actual_result.tolist())
+
+
+if __name__ == '__main__':
+    unittest.main()

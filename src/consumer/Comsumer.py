@@ -1,14 +1,15 @@
-from abc import abstractmethod
 from typing import Generic, TypeVar, List, Callable
+
+from mpmath import sqrt
 
 from src.solution.Solution import Solution
 from src.solution.combiner.Combiner import Combiner
-from src.solver.Solver import Solver
+from src.solver.Solver import Solver, Parameter
 from src.stage.Stage import Stage
 
 SolutionOrSub = TypeVar('SolutionOrSub', bound=Solution)
 CombinerOrSub = TypeVar('CombinerOrSub', bound=Combiner)
-AppropriateSolver = Solver[SolutionOrSub]
+AppropriateSolver = Solver[SolutionOrSub, Parameter]
 
 
 class Consumer(Generic[SolutionOrSub, CombinerOrSub]):
@@ -22,7 +23,7 @@ class Consumer(Generic[SolutionOrSub, CombinerOrSub]):
         if len(solutions) == 0:
             raise Exception(f"There's no solutions provided by: {solver}")
 
-        return sum([self.consume_solution(solution) for solution in solutions])
+        return sqrt(sum([self.consume_solution(solution) ** 2 for solution in solutions]))
 
     def consume_solution(self, solution: Solution) -> complex:
         stage_results: List[complex] = [stage.get_result(solution) for stage in self.stages]
