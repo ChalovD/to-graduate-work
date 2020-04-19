@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, Callable
 
-from src.solution.Solution import Solution
-from src.solver import Solver
+from src.solution.AbstractSolution import AbstractSolution
+from src.solver import AbstractSolver
 
-Solution = TypeVar['Solution', Solution]
+Solution = TypeVar['Solution', AbstractSolution]
 FROM = TypeVar['FROM']
 TO = TypeVar['TO']
 
@@ -15,5 +15,5 @@ class SolverBuilder(ABC, Generic[Solution, FROM, TO]):
         pass
 
     @abstractmethod
-    def build_solver(self) -> Solver:
+    def build_solver(self) -> AbstractSolver:
         pass

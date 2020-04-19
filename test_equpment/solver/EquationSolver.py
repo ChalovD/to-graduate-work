@@ -1,44 +1,40 @@
-from typing import Iterable, Callable, List
+from typing import Iterable, List
 
 import numpy
 from mpmath import findroot
 from numpy import linspace, array, ndarray
 
-from src.solver.Solver import Solver
+from src.solver.AbstractSolver import AbstractSolver, SOLUTION
 from src.util import fill
-from test_equpment.envirnment.solution.TestSolution import SolutionWithComplexMember
-from test_equpment.envirnment.solution.TestSolution import TestSolution
+from test_equpment.parameter.ComplexNumberParameter import ComplexNumberParameter
+from test_equpment.solution.ApproximateTwoDimensionComplexVectorSolution import \
+    ApproximateTwoDimensionComplexVectorSolution
 
 
-class TestSolver(Solver[SolutionWithComplexMember, complex]):
-    def __init__(self, generator: Callable[[complex, complex], complex], dimension: int, left_border: int,
-                 right_border: int, frequency: int):
-        super().__init__(generator)
+class EquationSolver(AbstractSolver[ApproximateTwoDimensionComplexVectorSolution, ComplexNumberParameter]):
+    def __init__(self, dimension: int, left_border: int, right_border: int, frequency: int):
+        super().__init__()
         self._dimension = dimension
         self._left_border = left_border
         self._right_border = right_border
         self._frequency = frequency
-        self._parameter = None
-
-    def set_parameter(self, parameter: complex):
-        self._parameter = parameter
 
     def problem(self, argument):
         def first(one: complex) -> complex:
-            return self.generator(one, self._parameter)
+            return self.generator(one, self.parameter.number)
 
         def second(two: complex) -> complex:
-            return self.generator(two - 1 + 0j, self._parameter)
+            return self.generator(two - 1 + 0j, self.parameter.number)
 
         return first(argument[0]), second(argument[1])
 
     @staticmethod
     def set_precision(precision: float):
-        TestSolution.set_equal_round(precision)
+        ApproximateTwoDimensionComplexVectorSolution.set_equal_round(precision)
 
-    def solve(self) -> Iterable[SolutionWithComplexMember]:
+    def solve(self) -> Iterable[SOLUTION]:
         grid: ndarray = self.__get_grid()
-        solutions: List[SolutionWithComplexMember] = []
+        solutions: List[ApproximateTwoDimensionComplexVectorSolution] = []
 
         for approx_point in grid:
             dirty_solution = findroot(
@@ -47,7 +43,8 @@ class TestSolver(Solver[SolutionWithComplexMember, complex]):
             )
 
             converted_dirty_solution = numpy.array(dirty_solution).astype(numpy.complex)
-            solution = TestSolution(converted_dirty_solution.item(0), converted_dirty_solution.item(1))
+            solution = ApproximateTwoDimensionComplexVectorSolution(converted_dirty_solution.item(0),
+                                                                    converted_dirty_solution.item(1))
 
             if solution not in solutions:
                 solutions.append(solution)

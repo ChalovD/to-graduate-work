@@ -1,11 +1,9 @@
-from typing import TypeVar, List
+from typing import List
 
-from src.solution.Solution import Solution
-
-SolutionWithComplexMember = Solution[List[complex]]
+from src.solution.AbstractSolution import AbstractSolution
 
 
-class TestSolution(SolutionWithComplexMember):
+class ApproximateTwoDimensionComplexVectorSolution(AbstractSolution[List[complex]]):
     equal_round: float = 0.1
 
     @classmethod

@@ -1,9 +1,12 @@
 import unittest
 
-from src.consumer.Comsumer import Consumer
-from test_equpment.envirnment.solution.combiner.TestCombiner import TestCombiner
-from test_equpment.envirnment.solver.TestSolver import TestSolver
-from test_equpment.envirnment.stage.TestStage import TestStage
+from mpmath import sqrt
+
+from src.consumer.EuclidConsumer import EuclidConsumer
+from test_equpment.parameter.ComplexNumberParameter import ComplexNumberParameter
+from test_equpment.solution.combiner.MultiplyCombiner import MultiplyCombiner
+from test_equpment.solver.EquationSolver import EquationSolver
+from test_equpment.stage.ExtractFirstAndMultiplyByParameterStage import ExtractFirstAndMultiplyByParameterStage
 
 DEFAULT_PARAMETER: complex = 0 + 0j
 
@@ -25,34 +28,58 @@ class CalculationTest(unittest.TestCase):
 
         The solution should be approx: (1, 0), (-1, 0), (1, 2), (-1, 2)
 
-        Registered stage just extracts the first value from every solution: 1, -1, 1, -1
-        So finally solution should be ( 1^2 + (-1)^2 + 1^2 + (-1)^2 )^(1/2) = 2
+        Registered stage just extracts the first value (from every solution) multiplied by the parameter:
+        1 * 0, -1 * 0, 1 * 0, -1 * 0
+        So finally solution should be ( 0^2 + 0^2 + 0^2 + 0^2 )^(1/2) = 0
         Note: generally it calculates complex values
         """
-        combiner = TestCombiner()
-        stages = [TestStage()]
-        solver = TestSolver(parametrized_problem, 2, -10, 10, 10)
-        solver.set_precision(0.1)
-        consumer = Consumer(combiner, stages)
+        combiner = MultiplyCombiner()
 
-        solver.set_parameter(DEFAULT_PARAMETER)
+        stage = ExtractFirstAndMultiplyByParameterStage()
+        stage.set_generator(parametrized_problem)
+        stages = [stage]
+
+        parameter = ComplexNumberParameter()
+        parameter.number = DEFAULT_PARAMETER
+
+        consumer = EuclidConsumer(stages, combiner)
+        consumer.set_parameter(parameter)
+
+        solver = EquationSolver(2, -10, 10, 10)
+        solver.set_precision(0.1)
+        solver.set_generator(parametrized_problem)
+
         result = consumer.consume_by_solver(solver)
-        self.assertEquals(2 + 0j, result)
+        consumer.clean()
+        self.assertEqual(result, 0)
 
     def test(self):
-        combiner = TestCombiner()
-        stages = [TestStage()]
-        solver = TestSolver(parametrized_problem, 2, -10, 10, 10)
+        combiner = MultiplyCombiner()
+
+        stage = ExtractFirstAndMultiplyByParameterStage()
+        stage.set_generator(parametrized_problem)
+        stages = [stage]
+
+        solver = EquationSolver(2, -10, 10, 10)
         solver.set_precision(0.1)
-        consumer = Consumer(combiner, stages)
+        solver.set_generator(parametrized_problem)
 
-        solver.set_parameter(3 + 0j)
+        consumer = EuclidConsumer(stages, combiner)
+
+        parameter1 = ComplexNumberParameter()
+        parameter1.number = 3 + 0j
+        consumer.set_parameter(parameter1)
         result1 = consumer.consume_by_solver(solver)
-        solver.set_parameter(8 + 0j)
-        result2 = consumer.consume_by_solver(solver)
+        consumer.clean()
 
-        self.assertEqual(4 + 0j, result1)
-        self.assertEquals(6 + 0j, result2)
+        parameter2 = ComplexNumberParameter()
+        parameter2.number = 8 + 0j
+        consumer.set_parameter(parameter2)
+        result2 = consumer.consume_by_solver(solver)
+        consumer.clean()
+
+        self.assertEqual(result1, sqrt(4 * (6 ** 2)))
+        self.assertEqual(result2, sqrt(4 * (24 ** 2)))
 
 
 if __name__ == '__main__':

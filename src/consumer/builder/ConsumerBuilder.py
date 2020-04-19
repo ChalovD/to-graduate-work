@@ -1,25 +1,25 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, List
 
-from src.consumer.Comsumer import Consumer
-from src.solution.Solution import Solution
-from src.solution.combiner import Combiner
-from src.stage import Stage
+from src.consumer.EuclidConsumer import Consumer
+from src.solution.AbstractSolution import AbstractSolution
+from src.solution.combiner import AbstractCombiner
+from src.stage import AbstractStage
 
-Solution = TypeVar['Solution', Solution]
+Solution = TypeVar['Solution', AbstractSolution]
 
 
 class SolverBuilder(ABC, Generic[Solution]):
     def __init__(self):
-        self.stages: List[Stage] = []
+        self.stages: List[AbstractStage] = []
         self.combiner = None
 
     @abstractmethod
-    def set_stage(self, stage: Stage) -> None:
+    def set_stage(self, stage: AbstractStage) -> None:
         self.stages.append(stage)
 
     @abstractmethod
-    def set_combiner(self, combiner: Combiner) -> None:
+    def set_combiner(self, combiner: AbstractCombiner) -> None:
         if self.combiner is not None:
             raise Exception(f"The combiner already assigned: {self.combiner}")
         self.combiner = combiner
