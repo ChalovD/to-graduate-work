@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, Callable
 
-from src.solution.AbstractSolution import AbstractSolution
-from src.solver import AbstractSolver
+from scr.solution.AbstractSolution import AbstractSolution
+from scr.solver import AbstractSolver
 
 Solution = TypeVar['Solution', AbstractSolution]
 FROM = TypeVar['FROM']

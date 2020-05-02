@@ -1,4 +1,4 @@
-from src.parameter.AbstaractParameter import AbstractParameter
+from scr.parameter.AbstaractParameter import AbstractParameter
 
 
 class ComplexNumberParameter(AbstractParameter):

@@ -1,11 +1,13 @@
+import logging
 from abc import ABC, abstractmethod
 from typing import Generic, List, Callable, TypeVar
 
-from src.parameter.AbstaractParameter import AbstractParameter
-from src.solution.AbstractSolution import AbstractSolution
-from src.solution.combiner.AbstractCombiner import AbstractCombiner
-from src.solver.AbstractSolver import AbstractSolver
-from src.stage.AbstractStage import AbstractStage
+from scr.main import shared, LOG_FILE
+from scr.parameter.AbstaractParameter import AbstractParameter
+from scr.solution.AbstractSolution import AbstractSolution
+from scr.solution.combiner.AbstractCombiner import AbstractCombiner
+from scr.solver.AbstractSolver import AbstractSolver
+from scr.stage.AbstractStage import AbstractStage
 
 SOLUTION = TypeVar('SOLUTION', bound=AbstractSolution)
 COMBINER = TypeVar('COMBINER', bound=AbstractCombiner)
@@ -14,10 +16,30 @@ PARAMETER = TypeVar('PARAMETER', bound=AbstractParameter)
 
 class AbstractConsumer(ABC, Generic[SOLUTION, COMBINER, PARAMETER]):
     def __init__(self, stages: List[AbstractStage[PARAMETER, SOLUTION]], combiner: COMBINER) -> None:
+        self.logger = None
+        self.set_up_logger()
         self.stages = stages
         self.combiner = combiner
         self.parameter = None  # Should be set in the appropriate setter
         self.processed_solutions: List[complex] = []
+
+    def set_up_logger(self):
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+
+        # ch = logging.StreamHandler()
+        # ch.setLevel(logging.DEBUG)
+
+        fh = logging.FileHandler(shared[LOG_FILE])
+        fh.setLevel(logging.DEBUG)
+
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        # ch.setFormatter(formatter)
+        fh.setFormatter(formatter)
+
+        # self.logger.addHandler(ch)
+        self.logger.addHandler(fh)
 
     def set_parameter(self, parameter: PARAMETER):
         self.parameter = parameter
@@ -28,7 +50,11 @@ class AbstractConsumer(ABC, Generic[SOLUTION, COMBINER, PARAMETER]):
         solver.set_parameter(self.parameter)
 
         solutions: List[SOLUTION] = solver.solve()
-        self.validate_solutions(solver, solutions)
+        try:
+            self.validate_solutions(solver, solutions)
+        except Exception:
+            self.logger.error(f"There's no solutions. It's assumed that hre result should be 0")
+            return 0
 
         for solution in solutions:
             self.process_solution(solution)

@@ -1,5 +1,5 @@
-from src.solution.AbstractSolution import AbstractSolution
-from src.stage.AbstractStage import AbstractStage
+from scr.solution.AbstractSolution import AbstractSolution
+from scr.stage.AbstractStage import AbstractStage
 from test_equpment.parameter.ComplexNumberParameter import ComplexNumberParameter
 from test_equpment.solution.ApproximateTwoDimensionComplexVectorSolution import \
     ApproximateTwoDimensionComplexVectorSolution

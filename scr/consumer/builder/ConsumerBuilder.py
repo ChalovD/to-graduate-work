@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, List
 
-from src.consumer.EuclidConsumer import Consumer
-from src.solution.AbstractSolution import AbstractSolution
-from src.solution.combiner import AbstractCombiner
-from src.stage import AbstractStage
+from scr.consumer.EuclidConsumer import Consumer
+from scr.solution.AbstractSolution import AbstractSolution
+from scr.solution.combiner import AbstractCombiner
+from scr.stage import AbstractStage
 
 Solution = TypeVar['Solution', AbstractSolution]
 

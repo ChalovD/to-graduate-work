@@ -1,5 +1,5 @@
-# from src.consumer.Consumer import Consumer, AppropriateSolver
-# from src.solution.combiner.AbstractCombiner import AbstractCombiner
+# from scr.consumer.Consumer import Consumer, AppropriateSolver
+# from scr.solution.combiner.AbstractCombiner import AbstractCombiner
 # from test.enviornment.solution.TestSolution import TestSolution
 # from test.enviornment.solution.combiner.TestCombiner import TestCombiner
 # from test.enviornment.stage.TestStage import TestStage

@@ -2,7 +2,7 @@ from typing import List, Type, TypeVar
 
 from mpmath import sqrt
 
-from src.consumer.AbstractCnsumer import AbstractConsumer, SOLUTION, COMBINER, PARAMETER
+from scr.consumer.AbstractCnsumer import AbstractConsumer, SOLUTION, COMBINER, PARAMETER
 
 
 class EuclidConsumer(AbstractConsumer[SOLUTION, COMBINER, PARAMETER]):

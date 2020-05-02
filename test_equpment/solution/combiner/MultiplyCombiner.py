@@ -1,4 +1,4 @@
-from src.solution.combiner.AbstractCombiner import AbstractCombiner
+from scr.solution.combiner.AbstractCombiner import AbstractCombiner
 
 
 class MultiplyCombiner(AbstractCombiner):

@@ -3,12 +3,16 @@ from typing import List
 from scr.solution.AbstractSolution import AbstractSolution
 
 
-class ApproximateTwoDimensionComplexVectorSolution(AbstractSolution[List[complex]]):
-    equal_round: float = 0.1
+class TwoValueSolution(AbstractSolution[List[complex]]):
+    equal_round = None
 
     @classmethod
     def set_equal_round(cls, equal_round: float):
         cls.equal_round = equal_round
+
+    @classmethod
+    def get_equal_round(cls):
+        return cls.equal_round
 
     def __init__(self, first_number: complex, second_number: complex):
         super().__init__()
